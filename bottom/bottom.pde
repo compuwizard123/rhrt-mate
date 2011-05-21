@@ -113,16 +113,17 @@ void loop() {
   MotPow[5] = 2*z;
   
   //loop through data and set tlc pwm for each motor
-  for(int i=0; i<6; i++) {
-    chan = i*2;
-    MotPow[i] = constrain(MotPow[i], -4095, 4095);
-    if(MotPow[i]<0) {
-      Tlc.set(chan, 0);
-      Tlc.set(chan+1, (-1)*MotPow[i]);
-    } else {
-      Tlc.set(chan, MotPow[i]);
-      Tlc.set(chan+1, 0);
-    }
+  for(int i=1; i<=6; i++) {
+    //chan = i*2;
+    MotPow[i] = map(constrain(MotPow[i], -4095, 4095), -4095, 4095, 0, 4095);
+    Tlc.set(i, MotPow[i]);
+    //if(MotPow[i]<0) {
+    //  Tlc.set(chan, 0);
+    //  Tlc.set(chan+1, (-1)*MotPow[i]);
+    //} else {
+    //  Tlc.set(chan, MotPow[i]);
+    //  Tlc.set(chan+1, 0);
+    //}
   }
   
   
@@ -132,7 +133,7 @@ void loop() {
   }
   
   //debugging for motor outputs
-  for(int i=0; i<6; i++) {
+  for(int i=1; i<=6; i++) {
    Serial.print(i);
    Serial.print(" ");
    Serial.print(MotPow[i]);
