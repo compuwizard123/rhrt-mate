@@ -1,6 +1,6 @@
 /*
-  High Technology High School Robotics - MATE ROV
-  Kevin Risden 2009
+  Rose-Hulman Institute of Technology Robotics Team - MATE ROV
+  Kevin Risden 201
   
   Purpose:
     Control bottomside electronics for underwater ROV
@@ -8,16 +8,14 @@
     * Outputs pwm to TLC5940 to control propulsion motors
   
   Hardware:
-    1 - Arduino Nano
+    1 - Arduino
     1 - TLC5940
   
   Software:
-    Standard Header - stdlib.h
     TLC5940 Library - http://code.google.com/p/tlc5940arduino/
     Messenger Library - http://www.arduino.cc/playground/Code/Messenger
 */
 
-#include "stdlib.h" 
 #include "tlc_config.h"
 #include "Tlc5940.h"
 #include <Messenger.h>
@@ -31,8 +29,7 @@ Messenger message = Messenger(); //Instantiate Messenger object with the default
 #define xyTriggerPin 8
 
 //declare output pin arrays
-//int digitalOutputPins[4] = {xyTopPin,xyTriggerPin,zTTopPin,zTTriggerPin};
-int digitalOutputPins[4] = {2,2,2,2};
+int digitalOutputPins[4] = {xyTopPin,xyTriggerPin,zTTopPin,zTTriggerPin};
 
 //declare data var for serial input
 int data[8] = {0,0,0,0,0,0,0,0};
@@ -114,18 +111,9 @@ void loop() {
   
   //loop through data and set tlc pwm for each motor
   for(int i=1; i<=6; i++) {
-    //chan = i*2;
     MotPow[i] = map(constrain(MotPow[i], -4095, 4095), -4095, 4095, 0, 4095);
     Tlc.set(i, MotPow[i]);
-    //if(MotPow[i]<0) {
-    //  Tlc.set(chan, 0);
-    //  Tlc.set(chan+1, (-1)*MotPow[i]);
-    //} else {
-    //  Tlc.set(chan, MotPow[i]);
-    //  Tlc.set(chan+1, 0);
-    //}
   }
-  
   
   //set digital outputs to state of each joystick button
   for(int i=0; i<4; i++) {
@@ -139,7 +127,7 @@ void loop() {
    Serial.print(MotPow[i]);
    Serial.print(" ");
   }
-  Serial.print("      ");
+  Serial.print(" ");
   //debugging for top and trigger buttons
   for(int i=4; i<8; i++) {
     Serial.print(i);
@@ -148,7 +136,8 @@ void loop() {
     Serial.print(" ");
   }
   Serial.println();
-
+  
+  delay(100);
   //send set pwm values to tlc5940
   Tlc.update();
 }

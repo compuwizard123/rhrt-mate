@@ -1,19 +1,26 @@
 /*
-  High Technology High School Robotics - MATE ROV
-  Kevin Risden 2009
+  Rose-Hulman Institute of Technology Robotics Team - MATE ROV
+  Kevin Risden 2011
   
   Purpose:
     Control topside electronics for underwater ROV.
     * Takes input from 2 Joysticks
     * Outputs axis and button states to serial at 9600 baud 
+    * Takes bottom side output and displays on video signal
   
   Hardware:
-    1 - Arduino Nano
+    1 - Arduino
     2 - Joysticks
+    1 - MAX7456
     
   Software:
-    None
+    SPI Library
+    MAX7456 Library
 */
+
+#include <NewSoftSerial.h>
+#include <SPI.h>
+#include "MAX7456.h"
 
 //define joystick axis pins
 #define Joy1xPin 0
@@ -27,6 +34,9 @@
 #define zTTopPin 7
 #define zTTriggerPin 6
 
+NewSoftSerial mySerial(2, 3);
+MAX7456 osd;
+
 //declare input var for input
 int input = 0;
 
@@ -37,6 +47,10 @@ int digitalInputPins[4] = {xyTopPin,xyTriggerPin,zTTopPin,zTTriggerPin};
 void setup() {
   //open the serial port at 9600 bps
   Serial.begin(9600);
+
+  mySerial.begin(9600);
+  
+  osd.begin();
   
   //set digitalInputPins mode to Input
   for(int i=0; i<4; i++){
@@ -44,7 +58,19 @@ void setup() {
   }
 }
 
+int incomingByte = 0;
+
 void loop() {
+  /*if (Serial.available() > 0) {
+    incomingByte = Serial.read();
+    osd.println(incomingByte);
+  }*/
+  
+  /*if (Serial.available()) {
+      mySerial.print((char)Serial.read());
+  }*/
+  mySerial.println("test mySerial");
+  
   //read the analog input on pins 0-3
   //analog pins 0-3 = inputs from joysticks
   for(int i=0;i<4;i++) {
