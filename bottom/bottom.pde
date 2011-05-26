@@ -24,9 +24,9 @@ Messenger message = Messenger(); //Instantiate Messenger object with the default
 
 //define joystick top and trigger pins
 #define zTTopPin 2
-#define zTTriggerPin 3
-#define xyTopPin 7
-#define xyTriggerPin 8
+#define zTTriggerPin 2
+#define xyTopPin 2
+#define xyTriggerPin 2
 
 //declare output pin arrays
 int digitalOutputPins[4] = {xyTopPin,xyTriggerPin,zTTopPin,zTTriggerPin};
@@ -59,6 +59,9 @@ void setup() {
   for(int i=0; i<4; i++) {
     pinMode(digitalOutputPins[i], OUTPUT);
   }
+  for(int i=0; i<6; i++) {
+    data[i] = 0;
+  }
 }
 
 void loop() {
@@ -73,7 +76,7 @@ void loop() {
       while(message.available()) { //loop through all parts of serial
         data[i] = message.readInt();
         if(i<4) {
-          if((data[i]-512)<10&&(data[i]-512)>(-10)) {
+          if((data[i]-512)<25&&(data[i]-512)>(-25)) {
             data[i] = 0; 
           } else {
             data[i] = map(data[i], 0, 1023, 0, 4095)-2048; //map serial data from 0-1023 to 0-4095 for tlc pwm
@@ -110,9 +113,9 @@ void loop() {
   MotPow[5] = 2*z;
   
   //loop through data and set tlc pwm for each motor
-  for(int i=1; i<=6; i++) {
-    MotPow[i] = map(constrain(MotPow[i], -4095, 4095), -4095, 4095, 0, 4095);
-    Tlc.set(i, MotPow[i]);
+  for(int i=0; i<6; i++) {
+    MotPow[i] = map(constrain(MotPow[i], -4095, 4095), -4095, 4095, 0, 3600);
+    Tlc.set(i+1, MotPow[i]);
   }
   
   //set digital outputs to state of each joystick button
